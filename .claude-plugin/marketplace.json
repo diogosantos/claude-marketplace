@@ -1,0 +1,15 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "diogosantos",
+  "description": "Diogo Santos's Claude Code plugins.",
+  "owner": { "name": "Diogo Santos", "url": "https://github.com/diogosantos" },
+  "plugins": [
+    {
+      "name": "waves",
+      "source": "./plugins/waves",
+      "description": "Jira-driven multi-agent delivery: a coordinator plans and merges, Sonnet implementers work in isolated worktrees, every change passes a ponytail review and a Codex review, and Jira stays self-contained for the product owner.",
+      "category": "productivity",
+      "tags": ["jira", "multi-agent", "worktree", "code-review", "workflow"]
+    }
+  ]
+}
