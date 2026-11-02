@@ -1,6 +1,6 @@
 {
   "name": "waves",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Jira-driven multi-agent delivery: coordinator plans and merges, Sonnet implementers in isolated worktrees, ponytail + Codex review gate, self-contained Jira.",
   "author": { "name": "Diogo Santos", "url": "https://github.com/diogosantos" },
   "repository": "https://github.com/diogosantos/claude-marketplace",

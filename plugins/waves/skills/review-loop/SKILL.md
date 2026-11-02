@@ -25,11 +25,13 @@ Re-run both on the fix commits until both are clean. Only then is the change mer
 
 ```
 D=$(mktemp -d)
-codex exec review -c model="<codex model from .claude/waves.md>" --base <base> > "$D/codex.txt" 2>&1
+codex exec review -c model="gpt-6-luna" --base <base> > "$D/codex.txt" 2>&1
 grep -v '^[+-]' "$D/codex.txt" | grep -B2 -A40 '^codex$' | tail -60
 ```
 
-- `--base <branch>` for a branch, `--commit <sha>` for one commit. Run it in the foreground (timeout up to 600000 ms).
+- `--base <branch>` for a branch, `--commit <sha>` for one commit. The default model is `gpt-6-luna`; use the model and
+  fallback named in `.claude/waves.md` when it sets them. The `-c model=` override is always required (the local Codex
+  config may pin a deprecated model). Run it in the foreground (timeout up to 600000 ms).
 - The closing `codex` message is the verdict. "No actionable correctness issues" (or similar) is clean; findings
   appear as `[P1]`/`[P2]` items or a "Review comment" block. **No closing message means "not reviewed", never
   "clean"**; re-run it.

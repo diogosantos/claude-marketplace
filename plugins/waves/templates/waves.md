@@ -20,7 +20,7 @@ Local gate script (same as CI): `<path or none>`. CI: `<provider, OS, workflow f
 ## Reviews
 - Ponytail: Skill `ponytail:ponytail` (coding) and `ponytail:ponytail-review` (review); fallback SKILL.md under
   `~/.claude/plugins/cache/ponytail/ponytail/<version>/skills/`.
-- Codex: `codex exec review -c model="<model>" --base <branch>`; fallback model `<model>`.
+- Codex: `codex exec review -c model="gpt-6-luna" --base <branch>` (plugin default); fallback model `gpt-5.6-luna`.
 
 ## App check (coordinator before handing the owner a command; agents for runtime tickets)
 - Command: `<binary> <flags for a headless/no-device run with real data or a real plugin>`
