@@ -35,5 +35,9 @@ description: >
   subagents; briefs point at the SKILL.md on disk and the agent follows it by hand.
 - **Agents do not wake up.** An agent that ends its turn to "wait" for cargo or Codex is stopped. Long commands run
   in the foreground with a timeout up to 600000 ms; the coordinator re-drives any agent that stops early.
+- **`pgrep -f` wait loops never end.** `while pgrep -f "cargo test"; do sleep 5; done` matches the loop's own command
+  line, so it spins forever and the agent shows as "waiting on its own background work" after it is done. Agents
+  wait on a PID or run in the foreground. After a wave, `ps -axo pid,ppid,command | grep "sleep 5"` under the
+  session's claude pid finds the stale loops; read each command and kill the stale ones by PID.
 - **CI watch.** `gh run watch` is unreliable from a session; poll `gh run list --branch main --limit 1 --json ...`.
 - **BSD tools.** macOS `sed` has no `\b`; use perl for word-boundary renames.

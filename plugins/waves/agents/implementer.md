@@ -51,6 +51,10 @@ report.
   before reporting it.
 - **Never end your turn while waiting on a background job.** An idle agent does not wake up. Run long commands in
   the foreground with a timeout up to 600000 ms.
+- Never wait on a command by name: `while pgrep -f "cargo test"; do sleep 5; done` matches the loop's own command
+  line and never ends (the harness then reports you as "waiting on background work" forever). Wait on a PID
+  (`wait $pid`, or `kill -0 $pid` in a bounded loop) or run the command in the foreground; never poll a file with
+  `until grep` without a bound.
 - Scratch files go in `mktemp -d`; clean up what you create.
 
 ## Done bar

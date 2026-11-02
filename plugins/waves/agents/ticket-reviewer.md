@@ -28,7 +28,8 @@ repository's `CLAUDE.md` and `.claude/waves.md`, the Jira ticket and its subtask
    app-run evidence, your head SHA. No status changes.
 
 Rules: never push, never merge, never touch `main`; never write git config; no synthetic OS input; stop only your
-own processes by PID; never end your turn waiting on a background job (foreground, timeout up to 600000 ms).
+own processes by PID; never end your turn waiting on a background job (foreground, timeout up to 600000 ms); never wait with
+`pgrep -f` on a command name (it matches the waiting loop itself), wait on a PID.
 
 Final report: head SHA · findings and fates · done-bar result · app-run evidence · anything the coordinator must
 decide. State only what you verified.
