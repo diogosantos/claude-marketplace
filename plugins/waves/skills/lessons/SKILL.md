@@ -39,5 +39,7 @@ description: >
   line, so it spins forever and the agent shows as "waiting on its own background work" after it is done. Agents
   wait on a PID or run in the foreground. After a wave, `ps -axo pid,ppid,command | grep "sleep 5"` under the
   session's claude pid finds the stale loops; read each command and kill the stale ones by PID.
-- **CI watch.** `gh run watch` is unreliable from a session; poll `gh run list --branch main --limit 1 --json ...`.
+- **CI watch.** `gh run watch` is unreliable from a session; poll `gh pr checks <branch> --json name,bucket`
+  on the PR. Check that CI runs on PRs into `wave/*` branches (`on: pull_request` without a `branches: [main]` filter);
+  if it does not, the PR shows no checks and only the local gate stands between the wave and the codeowner.
 - **BSD tools.** macOS `sed` has no `\b`; use perl for word-boundary renames.

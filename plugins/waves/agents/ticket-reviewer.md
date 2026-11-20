@@ -1,9 +1,10 @@
 ---
 name: ticket-reviewer
 description: >
-  Independent ticket-level review of a whole ticket branch before it merges to main: done bar, ponytail review of the
-  full diff against main, Codex review, a real-app check, fixes committed on the branch, and a Jira comment with every
-  finding and its fate. Use after all subtasks are merged into the ticket branch; never the agent that wrote the code.
+  Independent ticket-level review of a whole ticket PR before it merges into the wave branch: done bar, ponytail
+  review of the full diff against the wave branch, Codex review, a real-app check, fixes pushed to the ticket branch,
+  and a Jira and PR comment with every finding and its fate. Use after all subtask PRs are merged into the ticket
+  branch; never the agent that wrote the code.
 model: sonnet
 isolation: worktree
 ---
@@ -19,15 +20,16 @@ repository's `CLAUDE.md` and `.claude/waves.md`, the Jira ticket and its subtask
 3. **Ponytail review of the whole ticket** on `git diff <base>...HEAD`, following `waves:review-loop`. Read the
    connected code, not only the diff: every call site of a changed function, every path the brief lists as
    "protect", realtime or thread-safety rules from `CLAUDE.md`, persisted-format changes, test quality (are the
-   real paths tested, or only a test double?). Fix findings on the branch, commit with the ticket key.
+   real paths tested, or only a test double?). Fix findings on the branch, commit with the ticket key, push the
+   ticket branch (the PR updates).
 4. **Codex review** against the base once ponytail is clean and everything is committed; fix or decline with a
    reason; re-run until the closing verdict is clean.
 5. **Real-app check** of the final head with the project's app-check command, isolated home, PID watchdog,
    crash reports before and after. Report the log lines that prove the behaviour.
-6. Post one comment on the ticket: every finding (ponytail and Codex) and its fate, the done-bar result, the
-   app-run evidence, your head SHA. No status changes.
+6. Post one comment on the ticket, and the same text on the ticket PR (`gh pr comment`): every finding (ponytail
+   and Codex) and its fate, the done-bar result, the app-run evidence, your head SHA. No status changes.
 
-Rules: never push, never merge, never touch `main`; never write git config; no synthetic OS input; stop only your
+Rules: push only the ticket branch under review, never merge a PR, never touch `main` or the wave branch; never write git config; no synthetic OS input; stop only your
 own processes by PID; never end your turn waiting on a background job (foreground, timeout up to 600000 ms); never wait with
 `pgrep -f` on a command name (it matches the waiting loop itself), wait on a PID.
 

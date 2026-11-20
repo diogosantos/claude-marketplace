@@ -13,8 +13,8 @@ Re-run both on the fix commits until both are clean. Only then is the change mer
 
 ## 1. Ponytail review
 
-- Invoke the Skill `ponytail:ponytail-review` on `git diff <base>...HEAD` (base is `main` for a ticket branch, the
-  ticket branch for a subtask).
+- Invoke the Skill `ponytail:ponytail-review` on `git diff <base>...HEAD` (base is the wave branch for a ticket
+  branch, the ticket branch for a subtask).
 - If the Skill tool answers "Unknown skill" (it does inside subagents), read and follow
   `~/.claude/plugins/cache/ponytail/ponytail/<version>/skills/ponytail-review/SKILL.md` verbatim and say so in the
   Jira comment ("ponytail review run from SKILL.md"). Find the version with `ls ~/.claude/plugins/cache/ponytail/ponytail/`.
@@ -36,7 +36,7 @@ grep -v '^[+-]' "$D/codex.txt" | grep -B2 -A40 '^codex$' | tail -60
   appear as `[P1]`/`[P2]` items or a "Review comment" block. **No closing message means "not reviewed", never
   "clean"**; re-run it.
 - Fix every finding or record exactly why it does not apply; commit; re-run until clean.
-- The ticket-level Codex run against `main` is mandatory even when every subtask was reviewed: it repeatedly finds
+- The ticket-level Codex run against the wave branch is mandatory even when every subtask was reviewed: it repeatedly finds
   what subtask reviews miss (a schema bump for new persisted data, an event consumed by two handlers).
 
 ## 3. Done bar

@@ -1,7 +1,7 @@
 {
   "name": "waves",
-  "version": "0.1.2",
-  "description": "Jira-driven multi-agent delivery: coordinator plans and merges, Sonnet implementers in isolated worktrees, ponytail + Codex review gate, self-contained Jira.",
+  "version": "0.2.0",
+  "description": "Jira-driven multi-agent delivery: agents open PRs into a wave branch, the codeowner merges the wave PR into main, Sonnet implementers in isolated worktrees, ponytail + Codex review gate, self-contained Jira.",
   "author": { "name": "Diogo Santos", "url": "https://github.com/diogosantos" },
   "repository": "https://github.com/diogosantos/claude-marketplace",
   "license": "MIT",

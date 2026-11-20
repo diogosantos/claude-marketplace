@@ -1,17 +1,28 @@
 ---
 name: coordinate
 description: >
-  The coordinator method for a Jira-driven wave: reconcile with main, root-cause each ticket from the code,
-  split only what can run in parallel, write binding briefs, dispatch Sonnet implementers in worktrees, monitor
-  and re-drive them, integrate with reviews, and hand the owner an acceptance build. Use when running /waves:wave,
+  The coordinator method for a Jira-driven wave: reconcile with main, open the wave branch, root-cause each ticket
+  from the code, split only what can run in parallel, write binding briefs, dispatch Sonnet implementers in
+  worktrees, monitor and re-drive them, merge their PRs into the wave branch after review, and hand the codeowner an
+  acceptance build and a wave PR into main. Use when running /waves:wave,
   when asked to "run a wave", "dispatch agents", "coordinate these tickets", or whenever more than one ticket is
   to be delivered through subagents.
 ---
 
 # Coordinate a wave
 
-You are the coordinator. You plan, brief, dispatch, verify and merge. **You never write production code**: every
-code change comes from an implementer agent on its own branch. You may edit briefs, `CHANGELOG.md`,
+You are the coordinator. You plan, brief, dispatch, verify and merge into the wave branch. **You never write
+production code**: every code change comes from an implementer agent on its own branch, through its own PR.
+**You never push to `main` and never merge into `main`**: the wave reaches `main` only through the wave PR, which
+only the codeowner merges.
+
+Branch flow:
+```
+main ── wave/<slug> ── KEY-42-slug ── KEY-42.1-slug
+          ▲               ▲   └── PR → KEY-42-slug   (subtask agent opens, coordinator merges)
+          │               └────── PR → wave/<slug>   (ticket agent opens, coordinator merges)
+          └────────────────────── PR → main          (coordinator opens, codeowner merges)
+``` You may edit briefs, `CHANGELOG.md`,
 `docs/release/KNOWN_LIMITATIONS.md`, and resolve merge conflicts (resolution only, no new logic).
 
 Project facts (tracker, done bar, review commands, app check, branch names) live in the repo's `.claude/waves.md`.
@@ -26,7 +37,9 @@ rules; both are binding for you and for every agent.
 3. Confirm which tickets are already merged (`git log --oneline main | grep KEY`), which are reopened, and why
    owner acceptance failed (the exact build SHA the owner tested matters: reconcile it against `main`).
 4. Baseline: run the project's done bar on `main`. A red baseline is reported, never fixed by a wave agent.
-5. `df -h /`: want 20 GB or more free per concurrent agent (each worktree builds its own target dir). Delete stale
+5. Open the wave branch: `git checkout -b wave/<slug> origin/main && git push -u origin wave/<slug>` (`<slug>` from
+   the wave document, e.g. `wave/2026-11-playback`). Returning to a wave in progress, check out the existing one.
+6. `df -h /`: want 20 GB or more free per concurrent agent (each worktree builds its own target dir). Delete stale
    worktree build caches first if tight. See the `lessons` skill.
 
 ## 2. Plan
@@ -50,7 +63,8 @@ A brief is binding and self-contained. It always contains:
 
 - Read-first list: `CLAUDE.md`, `.claude/waves.md`, the ticket and context tickets with comments, the limitations
   entries for the ticket.
-- Branch name (`KEY-slug` off `main`, or off the ticket branch for a subtask), base SHA, review base.
+- Branch name (`KEY-slug` off the wave branch, or off the ticket branch for a subtask), base SHA, review base,
+  and the PR base (the same branch it was cut from).
 - Files owned; files other agents are editing right now (do not touch); shared files limited to named functions.
 - The diagnosis with file:line references, and the question the agent must answer (regression? missing
   affordance? wrong rule?).
@@ -82,18 +96,21 @@ A brief is binding and self-contained. It always contains:
 
 ## 6. Integrate
 
-1. Merge subtask branches into the ticket branch (`--no-ff`), then run the ticket-level review (ponytail, then Codex
-   against `main`) through `waves:ticket-reviewer`. Fix cycles go back to the implementer.
-2. Merge the ticket branch into `main` with `/waves:merge-ticket KEY` (changelog, limitations, push, CI, cleanup,
-   Jira Done).
-3. After each merge, agents still running on branches older than `main` get `main` merged into their branch by you
+1. Merge each verified subtask PR into its ticket branch (`gh pr merge <branch> --merge --delete-branch`), then run
+   the ticket-level review (ponytail, then Codex against the wave branch) through `waves:ticket-reviewer`. Fix cycles
+   go back to the implementer.
+2. Merge the ticket PR into the wave branch with `/waves:merge-ticket KEY` (changelog, limitations, CI on the PR,
+   merge commit, cleanup, Jira comment). Tickets stay In Progress until the wave PR reaches `main`.
+3. After each merge, ticket branches still in flight get the wave branch merged into them by you (and pushed)
    before their ticket-level review, so the review sees the real result.
 
 ## 7. Acceptance
 
-- Run the project's app check yourself on the final `main` (real plugin or real data, isolated HOME, PID watchdog,
+- Run the project's app check yourself on the wave branch head (real plugin or real data, isolated HOME, PID watchdog,
   crash reports before and after) before handing the owner any run command.
 - Package with the project's packaging command; record the exact SHA and the archive's SHA-256.
 - Post the wave report on the epic (see `ticket-closeout`, section "Wave report") and send the owner the short
   version: build command, per-ticket root cause and fix, what was verified automatically and in the real app, the
   manual acceptance checklist, and new follow-up tickets.
+- Open the wave PR into `main` with `/waves:ship-wave` and send the owner its URL. The codeowner merges it; you never
+  do. After it is merged, `/waves:ship-wave` again moves the tickets to Done.
