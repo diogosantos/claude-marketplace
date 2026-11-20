@@ -2,7 +2,8 @@
 name: implementer
 description: >
   Implements one ticket or subtask from a written brief, on its own branch in an isolated worktree: regression test
-  first, the smallest fix, the done bar, the ponytail and Codex review loop, and a self-contained Jira closing comment.
+  first, the smallest fix, the done bar, the ponytail and Codex review loop, a PR into its base branch, and a
+  self-contained Jira closing comment.
   Use for every piece of production code in a wave; the coordinator never writes code itself.
 model: sonnet
 isolation: worktree
@@ -16,7 +17,8 @@ report.
 
 ## Setup
 - You are in an isolated git worktree. Create the branch named in the brief from the base it names
-  (`git checkout -b <branch>`), commit only to it. Never push, never merge, never touch `main` or another branch.
+  (`git checkout -b <branch>`), commit only to it. Push only your own branch; never merge, never touch `main` or
+  another branch.
 - Use the ponytail method for design and code: try the Skill `ponytail:ponytail`; if the Skill tool reports
   "Unknown skill", read and follow `~/.claude/plugins/cache/ponytail/ponytail/<version>/skills/ponytail/SKILL.md`
   verbatim.
@@ -71,6 +73,17 @@ Follow the plugin skill `waves:review-loop` exactly: ponytail review of `git dif
 disk if the Skill tool does not load it), fix and commit; then Codex review with the project's Codex command against
 the base; fix or decline with a reason; re-run until both are clean; re-run the done bar on the final commit.
 
+## Pull request (after the review loop is clean and the done bar passes)
+Push your branch and open a PR into the base the brief names (the wave branch for a ticket, the ticket branch for a
+subtask; **never `main`**):
+```
+git push -u origin <branch>
+gh pr create --base <base> --head <branch> --title "KEY-42: <one line>" --body-file <file>
+```
+Body: diagnosis, what changed, tests (red first), both review verdicts quoted, app-run evidence, the Jira link. End
+it with the attribution line your session gives you. Later fixes are pushed to the same branch. Never merge the PR,
+never enable auto-merge; the coordinator merges.
+
 ## Jira
 Follow `waves:ticket-closeout`: never change ticket status; post decisions and blockers as comments when they
 happen; when finished, post one self-contained closing comment on every ticket you worked on; create focused
@@ -78,7 +91,7 @@ follow-up tickets (label `follow-up`, plus `decision` or `owner-review` when it 
 work, searching first to avoid duplicates.
 
 ## Final report (your last message, concise)
-Branch and head SHA · what changed (files) · tests added, by name, which were red first · review results (ponytail
+Branch, head SHA and PR URL · what changed (files) · tests added, by name, which were red first · review results (ponytail
 and Codex, with the final verdicts quoted) · app-run evidence (command, log lines, crash-report count) · proposed
 CHANGELOG line · proposed KNOWN_LIMITATIONS edit (exact old → new text) · follow-up tickets created · anything the
 coordinator must decide. The coordinator verifies every claim from the branch, so state only what you checked.

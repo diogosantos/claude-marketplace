@@ -4,7 +4,8 @@ Read first (binding): `CLAUDE.md`, `.claude/waves.md`, Jira KEY-42 with every co
 (why), the `KNOWN_LIMITATIONS.md` entries for this ticket. Paths are relative to `<absolute repo path>`; your
 worktree is a copy under `.claude/worktrees/`.
 
-Branch `KEY-42-slug` off `main` (`<base sha>`). Reviews against `main`.
+Branch `KEY-42-slug` off `wave/<slug>` (`<base sha>`). Reviews against `wave/<slug>`. When done, open a PR into
+`wave/<slug>` (never `main`); the coordinator merges it.
 You own: `<files>`. Shared files, named functions only: `<file>::<fn>`. Other agents are editing right now, do not
 touch: `<files>`.
 
@@ -20,7 +21,7 @@ touch: `<files>`.
 - <behaviour, as the owner will experience it>
 - Protect: <accepted behaviour by ticket key>; <persisted format unchanged unless this brief says otherwise>.
 
-## Tests (red first on main)
+## Tests (red first on the wave branch)
 <scenarios, by name, through the real input path where one exists>
 
 ## Real app
@@ -29,6 +30,6 @@ crash reports before/after>
 
 ## Jira
 Closing comment per `waves:ticket-closeout`: diagnosis with line numbers; what was built; rules in one table; tests
-by name (red first); ponytail and Codex findings and their fate; what the owner should try by hand; branch + head SHA;
-"merge to main pending coordinator". No status changes. Proposed CHANGELOG line and KNOWN_LIMITATIONS edit go in your
+by name (red first); ponytail and Codex findings and their fate; what the owner should try by hand; branch, head SHA
+and PR URL; "PR into `wave/<slug>` pending coordinator". No status changes. Proposed CHANGELOG line and KNOWN_LIMITATIONS edit go in your
 final report.

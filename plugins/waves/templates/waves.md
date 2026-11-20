@@ -30,8 +30,13 @@ Local gate script (same as CI): `<path or none>`. CI: `<provider, OS, workflow f
 - Packaging for owner builds: `<script>`; releasing notes: `<doc>`.
 
 ## Branches and commits
-- Ticket branch `KEY-42-slug` off `main`; subtask branch `KEY-42.1-slug` off the ticket branch; no pull requests;
-  coordinator merges `--no-ff` and pushes `main` after every ticket.
+- Wave branch `wave/<slug>` off `main`; ticket branch `KEY-42-slug` off the wave branch; subtask branch
+  `KEY-42.1-slug` off the ticket branch.
+- Every branch reaches its base through a PR. Agents open the PRs for their own branch; the coordinator merges
+  ticket and subtask PRs (merge commit) once reviews and CI are clean. Nothing is pushed or merged into `main` by
+  the plugin: the coordinator opens the wave PR into `main` and only the codeowner merges it.
+- Codeowner (merges wave PRs into `main`): `<name>`, GitHub `<handle>`.
+- CI on PRs into `wave/*`: `<yes | no: local gate only>`.
 - Commit message starts with the key; trailers: the session's attribution lines, plus `<any project trailer>`.
 - `CHANGELOG.md` section for new lines: `<[Unreleased] or version>`; limitations file: `docs/release/KNOWN_LIMITATIONS.md`.
 

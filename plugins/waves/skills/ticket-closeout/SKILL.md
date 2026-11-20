@@ -18,9 +18,9 @@ Tracker facts (project key, cloudId, transition ids) are in `.claude/waves.md`. 
 
 ## Status rules
 
-- In Progress when work starts; Done only once merged to `main`. A subtask is Done once merged into its ticket
-  branch. Parents follow children.
-- Agents never change status; the coordinator does, at merge time.
+- In Progress when work starts; Done only once the wave PR is merged into `main` by the codeowner
+  (`waves:ship-wave`). Merging into the wave branch is a comment, not a status change. Parents follow children.
+- Agents never change status; the coordinator does.
 - A ticket the owner reopened stays In Progress until the owner confirms by hand, if they asked for that.
 - Decisions and blockers are posted as comments **when they happen**, not at the end.
 
@@ -38,7 +38,8 @@ In this order, in plain language the owner can read without the code:
 6. **Screenshots** inline (any ticket with visible UI). See below.
 7. **Known limitations** that remain, each with the follow-up ticket key.
 8. **What the owner should try by hand**, as a numbered checklist.
-9. Branch, head SHA, and "merged to main at <sha>" (coordinator) or "merge to main pending coordinator" (agent).
+9. Branch, head SHA, the PR URL, and "PR into `<base>` pending coordinator" (agent) or "merged into the wave branch
+   at <sha>" / "merged to main via <wave PR> at <sha>" (coordinator).
 
 ## Screenshots
 
