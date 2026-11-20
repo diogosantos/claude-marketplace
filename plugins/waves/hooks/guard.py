@@ -414,8 +414,11 @@ def check_push(rest, cwd):
             elif opt == "--dry-run":
                 dry_run = True
         elif a.startswith("-") and len(a) > 1:
-            force = force or "f" in a[1:]
-            dry_run = dry_run or "n" in a[1:]
+            for flag in a[1:]:
+                if flag == "o":
+                    break  # `-ovalue`: the rest of the word is the push option's value
+                force = force or flag == "f"
+                dry_run = dry_run or flag == "n"
         else:
             positional.append(a)
         i += 1

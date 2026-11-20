@@ -28,7 +28,7 @@ class Blocked(unittest.TestCase):
     def test_push_to_main(self):
         for c in ["git push origin main", "git push origin HEAD:refs/heads/main", "git push origin :main",
                   "git push origin --delete main", "git push --all origin", "git push origin master",
-                  "git push -u origin feature main"]:
+                  "git push -u origin feature main", "git push -onone origin main", "git push -o ci.skip origin main"]:
             self.assertBlocked(c)
 
     def test_push_current_branch_on_main(self):
@@ -57,7 +57,7 @@ class Blocked(unittest.TestCase):
     def test_force_push(self):
         for c in ["git push --force origin x", "git push -f origin x", "git push -uf origin x",
                   "git push --force-with-lease origin x", "git push --force-with-lease=x:abc origin x",
-                  "git push origin +x", "git push origin +x:x"]:
+                  "git push origin +x", "git push origin +x:x", "git push -uf -onone origin x"]:
             self.assertBlocked(c)
 
     def test_pr_merge_into_main(self):
