@@ -12,7 +12,9 @@ A Claude Code plugin for Jira-driven, multi-agent delivery of a closed-source pr
   inline app-window screenshots, follow-up tickets, known-limitations entries that always name an open ticket;
 - a **guard hook** that blocks the commands that have caused real damage in shared multi-agent runs (writing git
   config, pkill/killall, synthetic OS input, force pushes) and anything that would land on `main` without the
-  codeowner (pushing to `main`, `gh pr merge` on a PR into `main`), in the coordinator and in every subagent;
+  codeowner (pushing to `main`, merging a PR into `main` with `gh pr merge` or the API), in the coordinator and in
+  every subagent. It parses the command line into the commands the shell would run, so text that is only data (a
+  commit message, a PR body) never trips it;
 - **`main` belongs to the codeowner**: a wave ends with one PR from the wave branch into `main`, which only the
   codeowner merges.
 
@@ -62,5 +64,6 @@ plugins/waves/
   agents/        implementer.md, ticket-reviewer.md
   skills/        coordinate, wave, reconcile, init, merge-ticket, ship-wave, ticket-closeout, review-loop, lessons
   hooks/         hooks.json, guard.py
+  tests/         test_guard.py   (python3 -m unittest discover -s plugins/waves/tests)
   templates/     waves.md, brief.md
 ```
